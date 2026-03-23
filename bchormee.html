@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>肉脞面: A Nanyang Masterpiece</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=Source+Sans+3:wght@400;700&display=swap');
+
+        body { 
+            margin: 0; 
+            background-color: #0e0e0e; 
+            color: #F5F5DC; 
+            font-family: 'Source Sans 3', sans-serif; 
+            overflow-x: hidden; 
+        }
+
+        /* Reduced height slightly to make the scroll feel snappier */
+        .scroll-height { height: 6000px; }
+
+        .viewport { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh; 
+            display: flex; justify-content: center; align-items: center; 
+            perspective: 2000px; overflow: hidden;
+            /* Performance boost: tells browser to use the GPU */
+            will-change: transform;
+        }
+
+        .hero-image-container {
+            position: absolute;
+            width: 100vw; 
+            height: 100vh;
+            z-index: 1; 
+            opacity: 0;
+            overflow: hidden;
+        }
+
+        .hero-image-container img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            object-position: center;
+            filter: brightness(0.5); 
+        }
+
+        .hero-image-container::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, rgba(14, 14, 14, 0) 0%, rgba(14, 14, 14, 0.9) 100%);
+        }
+
+        .final-bg-container {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+
+        .final-bg-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.3);
+        }
+
+        .slogan { 
+            position: absolute; text-align: center; z-index: 10; 
+            pointer-events: none; 
+        }
+
+        .bcm-zh { 
+            display: block; font-size: clamp(4rem, 12vw, 9rem); 
+            color: #B22222; font-weight: 900; 
+        }
+
+        .bcm-en { 
+            display: block; font-family: 'Playfair Display', serif; 
+            font-style: italic; font-size: clamp(1.5rem, 4vw, 3.5rem); 
+            color: #D4AF37; 
+        }
+
+        .card { 
+            position: absolute; width: 340px; padding: 30px; border-radius: 12px; 
+            background: rgba(14, 14, 14, 0.95); /* More solid background for better performance */
+            border-left: 6px solid #B22222; 
+            opacity: 0; z-index: 15; 
+            box-shadow: 0 30px 60px rgba(0,0,0,0.7);
+            /* Performance optimization */
+            backface-visibility: hidden;
+        }
+
+        .card-title { font-family: 'Playfair Display', serif; color: #D4AF37; font-size: 1.8rem; margin: 0 0 10px 0; }
+        
+        .coming-soon { 
+            position: absolute; width: 85%; max-width: 800px; 
+            text-align: center; opacity: 0; z-index: 20; 
+            transform: translateY(50px);
+        }
+        .cs-title { font-family: 'Playfair Display', serif; font-size: 4.5rem; color: #B22222; margin-bottom: 10px; }
+        .cs-subtitle { font-size: 1.5rem; color: #D4AF37; margin-bottom: 30px; letter-spacing: 2px; text-transform: uppercase; }
+        .cs-text { font-size: 1.3rem; line-height: 1.8; color: #ccc; font-style: italic; }
+
+    </style>
+</head>
+<body>
+
+    <div class="scroll-height"></div>
+    
+    <div class="viewport">
+        <div class="hero-image-container">
+            <img src="hero.jpg" alt="Bak Chor Mee Landscape">
+        </div>
+
+        <div class="final-bg-container">
+            <img src="Image 5.jpg" alt="Final Legend Background">
+        </div>
+
+        <h1 class="slogan">
+            <span class="bcm-zh">肉脞面</span>
+            <span class="bcm-en">A Nanyang Masterpiece</span>
+        </h1>
+
+        <div class="scene">
+            <div class="card c1"><h2 class="card-title">Al Dente Foundation</h2><p>Springy Mee Pok tossed in artisanal lard oil.</p></div>
+            <div class="card c2"><h2 class="card-title">The Savoury Core</h2><p>Succulent pork slices and meatballs, simmered in tradition.</p></div>
+            <div class="card c3"><h2 class="card-title">Vinegar & Fire</h2><p>Aged black vinegar meets a handmade chili legacy.</p></div>
+        </div>
+
+        <div class="coming-soon">
+            <h2 class="cs-title">The Legend Awaits</h2>
+            <div class="cs-subtitle">Full Review Coming Soon</div>
+            <p class="cs-text">"The soul of Bak Chor Mee is about to be unveiled."</p>
+        </div>
+    </div>
+
+    <script>
+        // Use window.onload to ensure EVERYTHING is loaded before starting the animation
+        window.onload = () => {
+            gsap.registerPlugin(ScrollTrigger);
+
+            const tl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: ".scroll-height",
+                    start: "top top",
+                    end: "bottom bottom",
+                    scrub: 1, // Smoother follow
+                }
+            });
+
+            // 1. Reveal Slogan & Bg
+            tl.to(".slogan", { scale: 0.9, opacity: 0, duration: 2 })
+              .to(".hero-image-container", { opacity: 1, duration: 2 }, "-=1.5");
+
+            // 2. Parallax
+            tl.to(".hero-image-container img", { y: -50, duration: 10 }, 0) 
+              .fromTo(".c1", { x: -600, opacity: 0 }, { x: -160, y: -120, opacity: 1, duration: 3 }, "-=8")
+              .fromTo(".c2", { x: 600, opacity: 0 }, { x: 160, y: 0, opacity: 1, duration: 3 }, "-=7")
+              .fromTo(".c3", { y: 600, opacity: 0 }, { x: 0, y: 180, opacity: 1, duration: 3 }, "-=6");
+
+            // 3. The Stack (Removed blur to fix lag)
+            tl.to(".hero-image-container", { brightness: 0.2, duration: 4 }, "-=3")
+              .to(".card", { x: 0, y: (i) => i * -30, rotateX: -20, opacity: 1, duration: 3, stagger: 0.1 }, "-=3");
+
+            // 4. Final Fix
+            tl.to(".card", { opacity: 0, y: -100, duration: 2 }) 
+              .to(".hero-image-container", { opacity: 0, duration: 2 }, "-=2")
+              .to(".final-bg-container", { opacity: 1, duration: 2 }, "-=1") 
+              .to(".coming-soon", { opacity: 1, y: 0, duration: 2 }, "-=1.5");
+        };
+    </script>
+</body>
+</html>
